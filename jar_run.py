@@ -33,7 +33,7 @@ def operator():
     bash_pull = BashOperator(
         task_id="bash_pull",
         bash_command='echo "bash pull demo" && '
-                     f'echo "The xcom pushed manually is {XComArg(read_jar_loc, key="jar_full_path")}"'
+                     f'echo "The xcom pushed manually is {{ ti.xcom_pull(task_ids="read_jar_location", key="jar_full_path) }}"'
                      'echo "finished"',
         do_xcom_push=False,
     )
