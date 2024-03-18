@@ -1,7 +1,6 @@
 import json
 from datetime import timedelta, datetime
 
-from airflow import XComArg
 from airflow.decorators import dag, task
 from airflow.hooks.base import BaseHook
 from airflow.operators.bash import BashOperator
@@ -32,9 +31,9 @@ def operator():
     read_jar_loc = read_jar_location()
 
     bash_pull = BashOperator(
-        task_id="bash_pull",
+        task_id="run_bash_jar",
         bash_command='echo "bash pull demo" && '
-                     'echo "The xcom pushed manually is {{ task_instance.xcom_pull(task_ids="read_jar_location", key="jar_full_path") }}" && '
+                     'echo "execution JAR is {{ task_instance.xcom_pull(task_ids="read_jar_location", key="jar_full_path") }}" && '
                      '/opt/airflow/jars/jdk-17.0.10/bin/java -jar {{ task_instance.xcom_pull(task_ids="read_jar_location", key="jar_full_path") }}',
         do_xcom_push=False,
     )
