@@ -21,8 +21,10 @@ def operator():
     @task(task_id="read_jar_location")
     def read_jar_location():
         conn = BaseHook.get_connection("jar_loc")
-        conn.get_extra()
+        print("===== start print =====")
         print(conn)
+        print("===== end print =====")
+
 
     read_jar_loc = read_jar_location()
 
