@@ -1,7 +1,9 @@
 from datetime import timedelta, datetime
 
+from airflow import XComArg
 from airflow.decorators import dag, task
 from airflow.hooks.base import BaseHook
+from airflow.operators.bash import BashOperator
 
 
 @dag(
@@ -19,25 +21,25 @@ from airflow.hooks.base import BaseHook
 )
 def operator():
     @task(task_id="read_jar_location")
-    def read_jar_location():
+    def read_jar_location(ti=None):
         conn = BaseHook.get_connection("jar_loc")
         print("===== start print =====")
-        print(conn.get_extra())
-        print(conn.__str__())
-        print(conn.extra_dejson)
+        print(conn.extra_dejson.get("path"))
         print("===== end print =====")
-
+        ti.xcom_push(key="jar_full_path", value=conn.extra_dejson.get("path") + "/demobatch-0.0.1.jar")
 
     read_jar_loc = read_jar_location()
 
-    @task(task_id="print_test")
-    def print_test():
-        print("test")
+    bash_pull = BashOperator(
+        task_id="bash_pull",
+        bash_command='echo "bash pull demo" && '
+                     f'echo "The xcom pushed manually is {XComArg(read_jar_loc, key="jar_full_path")}"'
+                     'echo "finished"',
+        do_xcom_push=False,
+    )
 
-    print_t = print_test()
 
-
-    read_jar_loc >> print_t
+    read_jar_loc >> bash_pull
 
 
 operator()
