@@ -1,3 +1,4 @@
+import json
 from datetime import timedelta, datetime
 
 from airflow import XComArg
@@ -26,14 +27,14 @@ def operator():
         print("===== start print =====")
         print(conn.extra_dejson.get("path"))
         print("===== end print =====")
-        ti.xcom_push(key="jar_full_path", value=conn.extra_dejson.get("path") + "/demobatch-0.0.1.jar")
+        ti.xcom_push(key="jar_full_path", value=json.loads((conn.extra_dejson.get("path")))["path"] + "/demobatch-0.0.1.jar")
 
     read_jar_loc = read_jar_location()
 
     bash_pull = BashOperator(
         task_id="bash_pull",
         bash_command='echo "bash pull demo" && '
-                     f'echo "The xcom pushed manually is {{ ti.xcom_pull(task_ids="read_jar_location", key="jar_full_path") }}"'
+                     f'echo "The xcom pushed manually is {{ task_instance.xcom_pull(task_ids="read_jar_location", key="jar_full_path") }}"'
                      'echo "finished"',
         do_xcom_push=False,
     )
