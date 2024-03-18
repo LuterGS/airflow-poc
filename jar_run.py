@@ -22,7 +22,9 @@ def operator():
     def read_jar_location():
         conn = BaseHook.get_connection("jar_loc")
         print("===== start print =====")
-        print(conn)
+        print(conn.get_extra())
+        print(conn.__str__())
+        print(conn.extra_dejson)
         print("===== end print =====")
 
 
