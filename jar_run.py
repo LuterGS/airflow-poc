@@ -35,7 +35,7 @@ def operator():
         task_id="bash_pull",
         bash_command='echo "bash pull demo" && '
                      'echo "The xcom pushed manually is {{ task_instance.xcom_pull(task_ids="read_jar_location", key="jar_full_path") }}" && '
-                     'java -jar {{ task_instance.xcom_pull(task_ids="read_jar_location", key="jar_full_path") }}',
+                     '/opt/airflow/jars/jdk-17.0.10/bin/java -jar {{ task_instance.xcom_pull(task_ids="read_jar_location", key="jar_full_path") }}',
         do_xcom_push=False,
     )
 
