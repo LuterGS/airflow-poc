@@ -7,7 +7,7 @@ from airflow.operators.bash import BashOperator
 
 
 @dag(
-    dag_id="jar_run",
+    dag_id="jar_run_new",
     default_args={
         "depends_on_past": False,
         "retries": 1,
